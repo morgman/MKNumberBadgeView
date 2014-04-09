@@ -83,8 +83,7 @@
 	self.fillColor = [UIColor redColor];
 	self.strokeColor = [UIColor whiteColor];
 	self.textColor = [UIColor whiteColor];
-	self.hideWhenZero = NO;
-	self.userInteractionEnabled = NO; // so the badge view doesn't intercept touches when placed above a button
+    self.hideWhenZero = NO;
 	
 	self.backgroundColor = [UIColor clearColor];
 }
@@ -97,10 +96,10 @@
 	
 	CGContextRef curContext = UIGraphicsGetCurrentContext();
 
-	NSString* numberString = [NSString stringWithFormat:@"%d",self.value];
+//	NSString* numberString = [NSString stringWithFormat:@"%d",self.value];
 	
 	
-	CGSize numberSize = [numberString sizeWithFont:self.font];
+	CGSize numberSize = [self.value sizeWithFont:self.font];
 		
 	CGPathRef badgePath = [self newBadgePathForTextSize:numberSize];
 	
@@ -112,7 +111,7 @@
 	badgeRect.size.height = ceil( badgeRect.size.height );
 	
     
-    CGFloat lineWidth = 2.0;
+    CGFloat lineWidth = 1.0;
 	
 	CGContextSaveGState( curContext );
 	CGContextSetLineWidth( curContext, lineWidth );
@@ -213,7 +212,7 @@
 		
 	CGPoint textPt = CGPointMake( ctm.x + (badgeRect.size.width - numberSize.width)/2 , ctm.y + (badgeRect.size.height - numberSize.height)/2 );
 	
-	[numberString drawAtPoint:textPt withFont:self.font];
+	[self.value drawAtPoint:textPt withFont:self.font];
 
 	CGContextRestoreGState( curContext );
 
@@ -251,17 +250,18 @@
 
 #pragma mark -- property methods --
 
-- (void)setValue:(NSUInteger)inValue
+- (void)setValue:(NSString *)inValue
 {
 	_value = inValue;
+    int intValue = [_value intValue];
     
-    if (self.hideWhenZero == YES && _value == 0)
-    {
-        self.hidden = YES;
-    }
-    else
-    {
-        self.hidden = NO;
+    self.hidden = NO;
+    if (self.hideWhenZero == YES) { // && _value == 0)
+        if (_value != nil && [_value length] > 0) {
+            if (intValue == 0) {
+                self.hidden = YES;
+            }
+        }
     }
 	
 	[self setNeedsDisplay];
@@ -269,10 +269,10 @@
 
 - (CGSize)badgeSize
 {
-	NSString* numberString = [NSString stringWithFormat:@"%d",self.value];
+//	NSString* numberString = [NSString stringWithFormat:@"%d",self.value];
 	
 	
-	CGSize numberSize = [numberString sizeWithFont:self.font];
+	CGSize numberSize = [self.value sizeWithFont:self.font];
 	
 	CGPathRef badgePath = [self newBadgePathForTextSize:numberSize];
 	
