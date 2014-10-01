@@ -34,9 +34,9 @@
 
 
 @interface MKNumberBadgeView : UIView 
-{
-	NSString *_value;
-}
+//{
+//	NSString *_value;
+//}
 
 // The current value displayed in the badge. Updating the value will update the view's display
 @property (assign,nonatomic) NSString *value;
